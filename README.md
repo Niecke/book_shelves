@@ -3,6 +3,7 @@
 ## ToDo
 
 * [ ] add renovate bot
+* [ ] only run terraform after changes detected by plan
 * [ ] reduce rights of terraform key
 * [ ] add user management via Google Auth
     * [ ] add invite codes in DB
