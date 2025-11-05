@@ -9,8 +9,8 @@ env:
     REGION: europe-west3
     REPOSITORY: book-shelves-docker-repo
     PROJECT_ID: book-shelves-477020
-    SERVICE_NAME: doc-store-backend
-    IMAGE_NAME: doc-store-backend
+    SERVICE_NAME: book-shelves-backend
+    IMAGE_NAME: book-shelves-backend
 
 jobs:
   build-and-deploy:
