@@ -5,7 +5,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy all app files
-COPY . .
+COPY ./app .
 
 # Install Flask and dependencies (add requirements.txt if present)
 RUN pip install --no-cache-dir flask
