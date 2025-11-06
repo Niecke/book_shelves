@@ -1,10 +1,11 @@
 resource "google_sql_database_instance" "default" {
   name             = "book-shelves"
-  database_version = "POSTGRES_16"
+  database_version = "POSTGRES_15"
   region           = var.region
 
   settings {
     tier = "db-f1-micro"
+    edition = "ENTERPRISE"
   }
 }
 
