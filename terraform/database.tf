@@ -1,5 +1,5 @@
 resource "google_sql_database_instance" "default" {
-  name             = "book_shelves"
+  name             = "book-shelves"
   database_version = "POSTGRES_16"
   region           = var.region
 
