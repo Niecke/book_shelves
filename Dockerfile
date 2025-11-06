@@ -10,7 +10,7 @@ WORKDIR /app
 COPY ./app .
 
 # Install Flask and dependencies (add requirements.txt if present)
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Expose port 8080 (Cloud Run requirement)
 EXPOSE 8080
