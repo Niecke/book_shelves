@@ -4,6 +4,7 @@
 
 * [ ] add renovate bot
 * [ ] reduce rights of terraform key
+* [ ] add Alembic with Invite Codes + Local Postgres
 * [ ] add user management via Google Auth
 * [ ] add basic book list
     * store data in Cloud Spanner

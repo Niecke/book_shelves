@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    volumes:
+      - "./app:/app"
+    environment:
+      - FLASK_AUTO_UPGRADE=true
+    ports:
+      - "8080:8080"
+    # use this for creating db upgrade scripts; set FLASK_AUTO_UPGRADE to false
+    # command: ["flask", "db", "migrate", "-m", "Adding invite codes."]
+
+volumes:
+  postgres_data:
