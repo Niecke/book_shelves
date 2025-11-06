@@ -11,6 +11,7 @@ env:
     PROJECT_ID: book-shelves-477020
     SERVICE_NAME: book-shelves-backend
     IMAGE_NAME: book-shelves-backend
+    DATABASE_HOST: 34.107.11.147
 
 jobs:
   build-and-deploy:
@@ -44,4 +45,5 @@ jobs:
               --platform=managed \
               --allow-unauthenticated \
               --service-account=${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT_EMAIL }} \
-              --set-secrets=SQLALCHEMY_DATABASE_PASSWORD=db-password:latest
+              --set-secrets=SQLALCHEMY_DATABASE_PASSWORD=db-password:latest \
+              --set-env-vars=SQLALCHEMY_DATABASE_HOST=${{ env.DATABASE_HOST }}

@@ -2,7 +2,7 @@ import os
 
 DEBUG = os.environ.get("DEBUG", "false")
 
-FLASK_AUTO_UPGRADE = os.environ.get("FLASK_AUTO_UPGRADE", "false")
+FLASK_AUTO_UPGRADE = os.environ.get("FLASK_AUTO_UPGRADE", "true")
 
 SQLALCHEMY_DATABASE_HOST = os.environ.get("SQLALCHEMY_DATABASE_HOST", "localhost")
 SQLALCHEMY_DATABASE_USER = os.environ.get("SQLALCHEMY_DATABASE_USER", "book_shelves")
