@@ -1,0 +1,18 @@
+import os
+
+DEBUG = os.environ.get("DEBUG", "false")
+
+FLASK_AUTO_UPGRADE = os.environ.get("FLASK_AUTO_UPGRADE", "false")
+
+SQLALCHEMY_DATABASE_HOST = os.environ.get("SQLALCHEMY_DATABASE_HOST", "localhost")
+SQLALCHEMY_DATABASE_USER = os.environ.get("SQLALCHEMY_DATABASE_USER", "book_shelves")
+SQLALCHEMY_DATABASE_PASSWORD = os.environ.get(
+    "SQLALCHEMY_DATABASE_PASSWORD", "book_shelves"
+)
+SQLALCHEMY_DATABASE_DATABASE = os.environ.get(
+    "SQLALCHEMY_DATABASE_DATABASE", "book_shelves"
+)
+SQLALCHEMY_DATABASE_PORT = os.environ.get("SQLALCHEMY_DATABASE_PORT", 5432)
+SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get(
+    "SQLALCHEMY_TRACK_MODIFICATIONS", "false"
+)

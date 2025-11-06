@@ -1,20 +1,20 @@
-import os
 from flask import Flask
 from models import db
 from flask_migrate import upgrade, Migrate
+import env
 
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgresql+psycopg://myuser:mypassword@db:5432/mydatabase"
+    f"postgresql+psycopg://{env.SQLALCHEMY_DATABASE_USER}:{env.SQLALCHEMY_DATABASE_PASSWORD}@{env.SQLALCHEMY_DATABASE_HOST}:{env.SQLALCHEMY_DATABASE_PORT}/{env.SQLALCHEMY_DATABASE_DATABASE}"
 )
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = env.SQLALCHEMY_TRACK_MODIFICATIONS
 
 db.init_app(app)
 migrate = Migrate(app, db)
 
 
-if os.environ.get("FLASK_AUTO_UPGRADE", "false") == "true":
+if env.FLASK_AUTO_UPGRADE == "true":
     with app.app_context():
         upgrade()
 
@@ -25,4 +25,4 @@ def hello_world():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=env.DEBUG)
