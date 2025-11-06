@@ -42,4 +42,6 @@ jobs:
               --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest \
               --region=${{ env.REGION }} \
               --platform=managed \
-              --allow-unauthenticated
+              --allow-unauthenticated \
+              --service-account=${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT_EMAIL }} \
+              --set-secrets=SQLALCHEMY_DATABASE_PASSWORD=db-password:latest
