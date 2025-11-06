@@ -11,7 +11,7 @@ env:
     PROJECT_ID: book-shelves-477020
     SERVICE_NAME: book-shelves-backend
     IMAGE_NAME: book-shelves-backend
-    DATABASE_HOST: 34.107.11.147
+    DB_CONNECTION_NAME: book-shelves-477020:europe-west3:book-shelves
 
 jobs:
   build-and-deploy:
@@ -32,10 +32,14 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
 
-      - name: Build and Push Docker Image
+      - name: Build and Push Docker Image with Layer Cache
         run: |
-          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest .
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest
+          docker buildx create --use
+          docker buildx build \
+            --push \
+            --cache-from=type=registry,ref=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/cache:${{ env.IMAGE_NAME }} \
+            --cache-to=type=registry,ref=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/cache:${{ env.IMAGE_NAME }},mode=max \
+            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest .
 
       - name: Deploy to Cloud Run
         run: |
@@ -46,4 +50,5 @@ jobs:
               --allow-unauthenticated \
               --service-account=${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT_EMAIL }} \
               --set-secrets=SQLALCHEMY_DATABASE_PASSWORD=db-password:latest \
-              --set-env-vars=SQLALCHEMY_DATABASE_HOST=${{ env.DATABASE_HOST }}
+              --set-env-vars=CLOUDSQL_CONNECTION_NAME=${{ env.DB_CONNECTION_NAME }} \
+              --add-cloudsql-instances=${{ env.DB_CONNECTION_NAME }}
