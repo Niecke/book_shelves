@@ -10,7 +10,7 @@ resource "google_sql_database_instance" "default" {
 }
 
 resource "google_sql_user" "users" {
-  name     = "dbuser"
+  name     = "book_shelves"
   instance = google_sql_database_instance.default.name
   password = random_password.db_password.result
 }
