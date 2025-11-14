@@ -23,7 +23,9 @@ def upgrade():
         "invite_code",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("code", sa.CHAR(length=16), nullable=False),
-        sa.Column("created_at", sa.DateTime(), nullable=False),
+        sa.Column(
+            "created_at", sa.DateTime(), nullable=False, server_default=sa.func.now()
+        ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("code"),
     )
