@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Books</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Your Books</h2>
+        {% if books %}
+            <ul>
+                {% for book in books %}
+                    <li>
+                        <strong>{{ book.title }}</strong><br>
+                        <small>
+                            Authors: {{ book.authors | join(", ") }}<br>
+                            ISBN: {{ book.isbn }}<br>
+                            Language: {{ book.language }}<br>
+                            Genre: {{ book.genre }}<br>
+                        </small>
+                        {% if book.description %}
+                            <div>{{ book.description }}</div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no books yet.</p>
+        {% endif %}
+        <a href="{{ url_for('create_book') }}">Add a new book</a>
+    </div>
+</body>
+</html>
