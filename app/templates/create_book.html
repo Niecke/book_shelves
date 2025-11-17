@@ -8,7 +8,7 @@
 <body>
     <div class="container">
         <h2>Add a New Book</h2>
-        <form action="{{ url_for('create_book') }}" method="post">
+        <form action="{{ url_for('book.create_book') }}" method="post">
             <label for="title">Title</label>
             <input type="text" id="title" name="title" required maxlength="255">
 

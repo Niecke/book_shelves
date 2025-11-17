@@ -17,7 +17,10 @@
                 <img src="{{ user.picture }}" alt="Profile Picture" style="max-width:120px; border-radius:50%;">
             {% endif %}
         </div>
-        <form action="{{ url_for('logout') }}" method="get">
+        <form action="{{ url_for('book.list_books') }}" method="get">
+            <button type="submit">Books</button>
+        </form>
+        <form action="{{ url_for('auth.logout') }}" method="get">
             <button type="submit">Logout</button>
         </form>
     {% else %}

@@ -9,13 +9,13 @@
     <h2>Welcome</h2>
     <p>Please choose how you want to access your account:</p>
     <div class="option">
-        <form action="{{ url_for('login') }}" method="get">
+        <form action="{{ url_for('auth.login') }}" method="get">
             <button type="submit">Login with Google</button>
         </form>
     </div>
     <hr>
     <div class="option">
-        <form action="{{ url_for('register') }}" method="get">
+        <form action="{{ url_for('registration.register') }}" method="get">
             <label for="invite_code">Register with Invite Code:</label><br>
             <input type="text" id="invite_code" name="invite_code" maxlength="16" required>
             <input type="submit" value="Register">
