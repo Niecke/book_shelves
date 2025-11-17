@@ -4,9 +4,9 @@
 
 * [ ] add renovate bot
 * [ ] reduce rights of terraform key
-* [ ] add Alembic with Invite Codes + Local Postgres
+* [x] add Alembic with Invite Codes + Local Postgres
 * [ ] Change Cloud SQL + Cloud Run to use private IP
-* [ ] add user management via Google Auth
+* [x] add user management via Google Auth
 * [ ] add basic book list
     * store data in Cloud Spanner
     * [ ] add book
