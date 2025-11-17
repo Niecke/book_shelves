@@ -1,4 +1,13 @@
-from flask import Flask, jsonify, redirect, url_for, session, request
+from flask import (
+    Flask,
+    jsonify,
+    redirect,
+    url_for,
+    session,
+    request,
+    render_template,
+    abort,
+)
 from flask_migrate import upgrade, Migrate
 from authlib.integrations.flask_client import OAuth
 from authlib.common.security import generate_token
@@ -43,9 +52,20 @@ if env.FLASK_AUTO_UPGRADE == "true":
 @app.route("/")
 def home():
     user = dict(session).get("user", None)
-    return (
-        f'Hello, {user["email"]}' if user else '<a href="/login">Login with Google</a>'
-    )
+    if user:
+        return redirect("/profile")
+    return render_template("index.html")
+
+
+@app.route("/profile")
+def profile():
+    user = dict(session).get("user", None)
+    return render_template("profile.html", user=user)
+
+
+@app.errorhandler(400)
+def bad_request(error):
+    return render_template("400.html", error=error), 400
 
 
 @app.route("/login")
@@ -74,15 +94,15 @@ def logout():
 def register():
     invite_code = request.args.get("invite_code")
     if not invite_code:
-        return "Missing invite code", 400
+        abort(400, description="Missing invite code")
 
     # Ensure invite code is not already used:
     invite_obj = InviteCode.query.filter_by(code=invite_code).first()
     if not invite_obj:
-        return "Invalid invite code", 400
+        abort(400, description="Invalid invite code")
 
     if invite_obj.user:
-        return "Invite code already in use", 400
+        abort(400, description="Invite code already in use")
 
     session["pending_invite_code"] = invite_code
 
@@ -104,14 +124,14 @@ def register_callback():
     invite_code_val = session.pop("pending_invite_code", None)
     invite_obj = InviteCode.query.filter_by(code=invite_code_val).first()
     if not invite_obj:
-        return "Invalid invite code", 400
+        abort(400, description="Invalid invite code")
 
     # Ensure invite code is not already used:
     if invite_obj.user:
-        return "Invite code already in use", 400
+        abort(400, description="Invite code already in use")
 
     if User.query.filter_by(email=email).first():
-        return "User already exists", 400
+        abort(400, description="User already exists")
 
     # Create new user with invite_code_id
     user = User(email=email, invite_code=invite_obj)

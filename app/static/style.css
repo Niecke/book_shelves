@@ -1,0 +1,82 @@
+:root {
+    --primary: #2563eb;
+    --primary-light: #3b82f6;
+    --gray-bg: #f4f6fa;
+    --surface: #fff;
+    --shadow: 0 2px 8px rgba(30,41,59,0.10), 0 1px 2px rgba(30,41,59,0.08);
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: var(--gray-bg);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 430px;
+    margin: 4em auto;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    border-radius: 20px;
+    padding: 2.5em 2em;
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1.5em;
+}
+
+.profile-info, .option {
+    background: var(--gray-bg);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 1.2em 1em;
+    margin-bottom: 1.5em;
+}
+
+strong {
+    color: var(--primary-light);
+}
+
+button, input[type="submit"] {
+    background: var(--primary);
+    color: #fff;
+    padding: 0.7em 1.5em;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: background 0.15s;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+button:hover, input[type="submit"]:hover {
+    background: var(--primary-light);
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 0.6em;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    margin-bottom: 1em;
+    font-size: 1rem;
+    background: #f9fafb;
+}
+
+img {
+    margin-top: 0.8em;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgb(37 99 235 / 10%);
+}
+a {
+    color: var(--primary-light);
+    text-decoration: none;
+    font-weight: 500;
+}
+a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
