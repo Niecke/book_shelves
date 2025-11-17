@@ -88,22 +88,47 @@
     </div>
     <div class="container">
         {% if user %}
+        <form action="{{ url_for('book.search') }}" method="get">
+            <button type="submit">Search for book</button>
+        </form>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul style="color:#f59e42; margin-bottom:1em;">
+                {% for category, message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
             <div class="book-list">
                 <h3 style="margin-bottom:0.5em; text-align:left;">Your Books</h3>
                 {% if books %}
                     {% for book in books %}
-                        <div class="book-card">
-                            <div class="book-title">{{ book.title }}</div>
-                            <div class="book-meta">
-                                {% if book.authors %}by <span>{{ book.authors|join(', ') }}</span>{% endif %}
-                                &middot; <span>{{ book.language|upper }}</span>
-                                &middot; <span>ISBN: {{ book.isbn }}</span>
-                                &middot; <span>{{ book.genre|capitalize }}</span>
-                            </div>
-                            {% if book.description %}
-                                <div class="book-desc">{{ book.description }}</div>
-                            {% endif %}
+                    <div class="book-card">
+                        <div class="book-title">{{ book.title }}</div>
+                        <div class="book-meta">
+                            {% if book.authors %}by <span>{{ book.authors|join(', ') }}</span>{% endif %}
+                            &middot; <span>{{ book.language|upper }}</span>
+                            &middot; <span>ISBN: {{ book.isbn }}</span>
+                            &middot; <span>{{ book.genre|capitalize }}</span>
                         </div>
+                        {% if book.description %}
+                            <div class="book-desc">{{ book.description }}</div>
+                        {% endif %}
+                        <form action="{{ url_for('book.delete_book', book_id=book.id) }}" method="post" style="margin-top:0.6em;">
+                            <button type="submit" style="
+                                background: #ef4444;
+                                color: #fff;
+                                border: none;
+                                border-radius: 6px;
+                                padding: 0.4em 1.05em;
+                                font-size: 0.98em;
+                                cursor: pointer;
+                                transition: background 0.12s;
+                            ">Delete</button>
+                        </form>
+                    </div>
+                    
                     {% endfor %}
                 {% else %}
                     <p>You have no books yet.</p>

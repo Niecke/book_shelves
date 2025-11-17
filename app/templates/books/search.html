@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ISBN Lookup - BookShelves</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Search for a Book by ISBN</h2>
+        <form method="POST" style="margin-bottom:2em;">
+            <input type="text" name="isbn" placeholder="Enter ISBN" maxlength="13" required style="padding: 0.7em; border-radius:8px; border:1px solid #ececec; width: 250px;">
+            <button type="submit" style="padding: 0.7em 1.3em; border-radius:8px; border:none; background: var(--primary, #2563eb); color: #fff;">Search</button>
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul style="color:#f59e42; margin-bottom:1em;">
+              {% for category, message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+
+        {% if book %}
+        <div class="book-card">
+            <div class="book-title">{{ book.title }}</div>
+            <div class="book-meta">
+                Authors: {{ book.authors|join(', ') }}<br>
+                Language: {{ book.language|upper }}<br>
+                ISBN: {{ book.isbn }}<br>
+                Genre: {{ book.genre }}
+            </div>
+            {% if book.description %}
+                <div class="book-desc" style="margin-top:10px;">{{ book.description }}</div>
+            {% endif %}
+
+            <form method="post" action="{{ url_for('book.create') }}">
+                <input type="hidden" name="title" value="{{ book.title }}">
+                {% for author in book.authors %}
+                    <input type="hidden" name="authors" value="{{ author }}">
+                {% endfor %}
+                <input type="hidden" name="language" value="{{ book.language }}">
+                <input type="hidden" name="isbn" value="{{ book.isbn }}">
+                <input type="hidden" name="description" value="{{ book.description }}">
+                <input type="hidden" name="genre" value="{{ book.genre }}">
+                <button type="submit" style="margin-top:1.2em; padding: 0.7em 1.3em; border-radius:8px; border:none; background: #10b981; color: #fff;">Save Book</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
