@@ -2,24 +2,149 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome – Login or Register</title>
+    <title>BookShelves</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body { margin: 0; }
+        .app-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1em 2em 1em 2em;
+            background: var(--gray-bg, #f4f6fa);
+            border-bottom: 1px solid #e0e5ec;
+            box-shadow: 0 1px 4px rgba(30,41,59,0.04);
+        }
+        .app-title {
+            flex: 1;
+            text-align: center;
+            font-size: 2rem;
+            color: var(--primary, #2563eb);
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .profile-pic-top {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            border: 2px solid #fff;
+            cursor: pointer;
+            margin-left: auto;
+        }
+        .container {
+            max-width: 500px;
+            margin: 3em auto;
+        }
+        .book-list {
+            margin-top: 2.5em;
+            display: flex;
+            flex-direction: column;
+            gap: 1.3em;
+        }
+        .book-card {
+            background: #fff;
+            box-shadow: 0 1px 7px rgba(30,41,59,0.09), 0 0.5px 2px rgba(30,41,59,0.07);
+            border-radius: 12px;
+            padding: 1.1em 1.4em;
+            text-align: left;
+        }
+        .book-title {
+            font-weight: 600;
+            font-size: 1.16rem;
+            margin-bottom: 0.1em;
+        }
+        .book-meta {
+            color: #718096;
+            font-size: 0.97em;
+            margin-bottom: 0.4em;
+        }
+        .book-desc {
+            font-size: 0.99em;
+            color: #444;
+            margin-top: 0.25em;
+        }
+    </style>
 </head>
 <body>
-    <h2>Welcome</h2>
-    <p>Please choose how you want to access your account:</p>
-    <div class="option">
-        <form action="{{ url_for('auth.login') }}" method="get">
-            <button type="submit">Login with Google</button>
-        </form>
+    <div class="app-bar">
+        <div style="flex:1"></div>
+        <div class="app-title">BookShelves</div>
+        <div>
+            {% if user %}
+            <a href="{{ url_for('profile') }}">
+                <img class="profile-pic-top"
+                     src="{{ user.picture if user.picture else 'https://ui-avatars.com/api/?name=' ~ (user.name or user.email|default('User'))|urlencode }}"
+                     alt="User profile image">
+            </a>
+            {% endif %}
+            <form action="{{ url_for('auth.logout') }}" method="get" style="display: inline;">
+                <button type="submit" title="Logout">
+                    Logout
+                </button>
+            </form>
+        </div>
     </div>
-    <hr>
-    <div class="option">
-        <form action="{{ url_for('registration.register') }}" method="get">
-            <label for="invite_code">Register with Invite Code:</label><br>
-            <input type="text" id="invite_code" name="invite_code" maxlength="16" required>
-            <input type="submit" value="Register">
-        </form>
+    <div class="container">
+        {% if user %}
+            <div class="book-list">
+                <h3 style="margin-bottom:0.5em; text-align:left;">Your Books</h3>
+                {% if books %}
+                    {% for book in books %}
+                        <div class="book-card">
+                            <div class="book-title">{{ book.title }}</div>
+                            <div class="book-meta">
+                                {% if book.authors %}by <span>{{ book.authors|join(', ') }}</span>{% endif %}
+                                &middot; <span>{{ book.language|upper }}</span>
+                                &middot; <span>ISBN: {{ book.isbn }}</span>
+                                &middot; <span>{{ book.genre|capitalize }}</span>
+                            </div>
+                            {% if book.description %}
+                                <div class="book-desc">{{ book.description }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>You have no books yet.</p>
+                {% endif %}
+            </div>
+        {% else %}
+        <h2>Welcome to BookShelves</h2>
+        <div style="margin: 2.5em 0; display: flex; flex-direction: column; align-items: center; gap: 1.2em;">
+            <form action="{{ url_for('auth.login') }}" method="get" style="width: 100%;">
+                <button type="submit" style="
+                    width: 220px;
+                    padding: 0.9em;
+                    border-radius: 8px;
+                    background: var(--primary, #2563eb);
+                    color: #fff;
+                    font-size: 1.13em;
+                    border: none;
+                    cursor: pointer;
+                    box-shadow: 0 2px 5px rgba(30,41,59,0.08);
+                    margin-bottom: 0.5em;
+                    transition: background 0.14s;
+                ">Login with Google</button>
+            </form>
+            <form action="{{ url_for('registration.register') }}" method="get" style="width: 100%;">
+                <input type="text" placeholder="Invite code" name="invite_code" required maxlength="16"
+                       style="margin-bottom:0.5em; width: 204px; padding: 0.7em; border-radius: 8px; border: 1px solid #e1e5ea; font-size: 1em;">
+                <button type="submit" style="
+                    width: 220px;
+                    padding: 0.9em;
+                    border-radius: 8px;
+                    background: #10b981;
+                    color: #fff;
+                    font-size: 1.13em;
+                    border: none;
+                    cursor: pointer;
+                    box-shadow: 0 2px 5px rgba(30,41,59,0.08);
+                    transition: background 0.14s;
+                ">Register with Invite Code</button>
+            </form>
+        </div>
+        {% endif %}
     </div>
 </body>
 </html>

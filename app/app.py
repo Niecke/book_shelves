@@ -1,23 +1,25 @@
-from flask import (
-    jsonify,
-    redirect,
-    session,
-    render_template,
-)
+from flask import jsonify, redirect, session, render_template, url_for
 import env
 from models import InviteCode
 from decorators import login_required
 from factory import create_app
+from models import User
 
 app = create_app()
 
 
 @app.route("/")
 def home():
-    user = dict(session).get("user", None)
+    user = session.get("user")
+    books = []
     if user:
-        return redirect("/profile")
-    return render_template("index.html")
+        # Fetch the User model from DB (not the session dict!)
+        user_db = User.query.filter_by(email=user["email"]).first()
+        if user_db:
+            books = user_db.books
+        return render_template("index.html", user=user, books=books)
+    else:
+        return render_template("index.html")
 
 
 @app.route("/profile")
