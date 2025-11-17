@@ -28,4 +28,4 @@ SERVER_METADATA_URL = os.environ.get(
     "SERVER_METADATA_URL",
     "https://accounts.google.com/.well-known/openid-configuration",
 )
-CLIENT_KWARGS = os.environ.get("CLIENT_KWARGS", "openid email profile")
+CLIENT_KWARGS = os.environ.get("CLIENT_KWARGS", {"scope": "openid email profile"})
