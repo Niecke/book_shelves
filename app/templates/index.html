@@ -12,7 +12,7 @@
                 <div class="book-card">
                     <div class="book-title">{{ book.title }}</div>
                     <div class="book-meta">
-                        {% if book.authors %}by <span>{{ book.authors|join(', ') }}</span>{% endif %}
+                        {% if book.authors %}by <span>{{ book.authors }}</span>{% endif %}
                         &middot; <span>{{ book.language|upper }}</span>
                         &middot; <span>ISBN: {{ book.isbn }}</span>
                         &middot; <span>{{ book.genre|capitalize }}</span>

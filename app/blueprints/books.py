@@ -7,12 +7,12 @@ from flask import (
     request,
     render_template,
     flash,
-    current_app,
 )
 import requests
 from utils.user_utils import get_current_user
 from models import db, Book
 from decorators import login_required
+import env
 
 
 book_bp = Blueprint(
@@ -20,30 +20,64 @@ book_bp = Blueprint(
 )
 
 
+def request_google_books_api(isbn: str, authors: str) -> dict:
+    if isbn:
+        query = f"isbn:{isbn}"
+    elif authors:
+        query = f"inauthor:{authors}"
+    else:
+        return {}
+    google_api = f"{env.GOOGLE_BOOKS_API}?q={query}"
+    resp = requests.get(google_api)
+    return resp.json()
+
+
 @book_bp.route("/search", methods=["GET", "POST"])
 @login_required
 def search():
-    book_data = None
+    book_data = []
     if request.method == "POST":
-        isbn = request.form.get("isbn")
-        if isbn:
-            google_api = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
-            resp = requests.get(google_api)
-            data = resp.json()
-            current_app.logger.debug(data)
-            if "items" in data and data["items"]:
-                info = data["items"][0]["volumeInfo"]
-                book_data = {
+        isbn = request.form.get("isbn", "")
+        authors = request.form.get("authors", "")
+        # first search for isbn
+        data = request_google_books_api(isbn, "")
+        for item in data.get("items", []):
+            info = item["volumeInfo"]
+            book_data.append(
+                {
                     "title": info.get("title"),
-                    "authors": info.get("authors", []),
+                    "authors": info.get("authors", ""),
                     "language": info.get("language"),
                     "description": info.get("description"),
                     "isbn": isbn,
                     "genre": ", ".join(info.get("categories", [])),
                 }
-            else:
-                flash("No book found for that ISBN.", "warning")
-    return render_template("books/search.html", book=book_data)
+            )
+        # now search for authors
+        data = request_google_books_api("", authors)
+        for item in data.get("items", []):
+            info = item["volumeInfo"]
+            # Extract ISBN if available
+            isbn_list = [
+                identifier["identifier"]
+                for identifier in info.get("industryIdentifiers", [])
+                if identifier["type"] in ["ISBN_10", "ISBN_13"]
+            ]
+            isbn = isbn_list[0] if isbn_list else "N/A"
+            book_data.append(
+                {
+                    "title": info.get("title"),
+                    "authors": info.get("authors", ""),
+                    "language": info.get("language"),
+                    "description": info.get("description"),
+                    "isbn": isbn,
+                    "genre": ", ".join(info.get("categories", [])),
+                }
+            )
+        # if no books where found flash a message
+        if not book_data:
+            flash("No books found.", "warning")
+    return render_template("books/search.html", books=book_data)
 
 
 @book_bp.route("/create", methods=["GET", "POST"])
