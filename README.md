@@ -17,6 +17,7 @@
     * [ ] edit book
     * [ ] delete book
     * [ ] list books
+* [x] block users which are not registered
 * [ ] Integrate Google Book API
 
 ## GCP Project Setup
