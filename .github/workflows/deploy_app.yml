@@ -50,5 +50,7 @@ jobs:
               --allow-unauthenticated \
               --service-account=${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT_EMAIL }} \
               --set-secrets=SQLALCHEMY_DATABASE_PASSWORD=db-password:latest \
+              --set-secrets=GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest \
+              --set-secrets=GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest \
               --set-env-vars=CLOUDSQL_CONNECTION_NAME=${{ env.DB_CONNECTION_NAME }} \
               --add-cloudsql-instances=${{ env.DB_CONNECTION_NAME }}
