@@ -1,38 +1,40 @@
-from flask import Flask, jsonify
-from flask_migrate import upgrade, Migrate
-from models import db, InviteCode
+from flask import jsonify, redirect, session, render_template, url_for
 import env
+from models import InviteCode
+from decorators import login_required
+from factory import create_app
+from models import User
+
+app = create_app()
 
 
-app = Flask(__name__)
-if env.SQLALCHEMY_DATABASE_HOST:
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        f"postgresql+psycopg://{env.SQLALCHEMY_DATABASE_USER}:{env.SQLALCHEMY_DATABASE_PASSWORD}@{env.SQLALCHEMY_DATABASE_HOST}:{env.SQLALCHEMY_DATABASE_PORT}/{env.SQLALCHEMY_DATABASE_DATABASE}"
-    )
-elif env.SQLALCHEMY_CONNECTION_NAME:
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        f"postgresql+psycopg://{env.SQLALCHEMY_DATABASE_USER}:{env.SQLALCHEMY_DATABASE_PASSWORD}@/{env.SQLALCHEMY_DATABASE_DATABASE}?host=/cloudsql/{env.SQLALCHEMY_CONNECTION_NAME}"
-    )
-else:
-    print("No database connection config set!")
-    exit(1)
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = env.SQLALCHEMY_TRACK_MODIFICATIONS
-
-db.init_app(app)
-migrate = Migrate(app, db)
+@app.route("/")
+def home():
+    user = session.get("user")
+    books = []
+    if user:
+        # Fetch the User model from DB (not the session dict!)
+        user_db = User.query.filter_by(email=user["email"]).first()
+        if user_db:
+            books = user_db.books
+        return render_template("index.html", user=user, books=books)
+    else:
+        return render_template("index.html")
 
 
-if env.FLASK_AUTO_UPGRADE == "true":
-    with app.app_context():
-        upgrade()
+@app.route("/profile")
+def profile():
+    user = dict(session).get("user", None)
+    return render_template("profile.html", user=user)
 
 
-@app.route("/", methods=["GET"])
-def index():
-    return "Hello, World! Version 4"
+@app.errorhandler(400)
+def bad_request(error):
+    return render_template("400.html", error=error), 400
 
 
 @app.route("/codes", methods=["GET"])
+@login_required
 def get_invite_codes():
     invite_codes = InviteCode.query.all()  # Fetch all rows
     result = [

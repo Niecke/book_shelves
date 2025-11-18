@@ -1,0 +1,214 @@
+:root {
+    --primary: #2563eb;
+    --primary-light: #3b82f6;
+    --gray-bg: #f4f6fa;
+    --surface: #fff;
+    --shadow: 0 2px 8px rgba(30,41,59,0.10), 0 1px 2px rgba(30,41,59,0.08);
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: var(--gray-bg);
+    margin: 0;
+    padding: 0;
+}
+
+.app-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.3em 2em 1.3em 2em;
+    background: var(--gray-bg, #f4f6fa);
+    border-bottom: 1px solid #e0e5ec;
+    box-shadow: 0 1px 4px rgba(30,41,59,0.04);
+    position: relative;
+}
+
+/* Ensure app-title is always centered using absolute centering technique */
+.app-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 2rem;
+    color: var(--primary, #2563eb);
+    letter-spacing: 1px;
+    font-weight: 600;
+    width: max-content;
+    z-index: 2;
+}
+
+/* Flex container for profile + logout */
+.app-actions {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    z-index: 2;
+}
+
+/* Reuse your profile-pic-top styles */
+.profile-pic-top {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+
+/* Button style for logout only */
+.btn-logout {
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5em 1em;
+    font-size: 1em;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.16s;
+}
+.btn-logout:hover, .btn-logout:focus {
+    background: #f87171;
+}
+
+.container {
+    max-width: 80%;
+    margin: 4em auto;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    border-radius: 20px;
+    padding: 2.5em 2em;
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1.5em;
+}
+
+.profile-info, .option {
+    background: var(--gray-bg);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 1.2em 1em;
+    margin-bottom: 1.5em;
+}
+
+strong {
+    color: var(--primary-light);
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 0.6em;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    margin-bottom: 1em;
+    font-size: 1rem;
+    background: #f9fafb;
+}
+
+img {
+    margin-top: 0.8em;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgb(37 99 235 / 10%);
+}
+
+
+.btn-link {
+    display: inline-block;
+    padding: 0.5em 1.2em;
+    background: #2563eb;          /* blue */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.16s;
+}
+.btn-link:hover, .btn-link:focus {
+    background: #3b82f6;         /* brighter blue */
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-link.btn-save {
+    background: #10b981;
+}
+.btn-link.btn-save:hover, .btn-link.btn-save:focus {
+    background: #34d399;
+}
+
+.btn-link.btn-delete {
+    background: #ef4444;      /* red */
+}
+.btn-link.btn-delete:hover, .btn-link.btn-delete:focus {
+    background: #f87171;      /* light red */
+}
+
+.book-list {
+    margin-top: 2.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.3em;
+}
+.book-card {
+    background: #fff;
+    box-shadow: 0 1px 7px rgba(30,41,59,0.09), 0 0.5px 2px rgba(30,41,59,0.07);
+    border-radius: 12px;
+    padding: 1.1em 1.4em;
+    text-align: left;
+}
+.book-title {
+    font-weight: 600;
+    font-size: 1.16rem;
+    margin-bottom: 0.1em;
+}
+.book-meta {
+    color: #718096;
+    font-size: 0.97em;
+    margin-bottom: 0.4em;
+}
+.book-desc {
+    font-size: 0.99em;
+    color: #444;
+    margin-top: 0.25em;
+}
+
+/* Flash messages as toast*/
+#toast-container {
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.toast {
+    min-width: 220px;
+    max-width: 300px;
+    background: #2563eb;
+    color: #fff;
+    padding: 0.7em 1.1em;
+    border-radius: 8px;
+    font-size: 1.06em;
+    box-shadow: 0 2px 12px rgba(30,41,59,0.13);
+    opacity: 0.90;
+    animation: fade-in 0.4s;
+}
+.toast-success { background: #10b981; }
+.toast-warning { background: #f59e42; color: #fff; }
+.toast-danger, .toast-error { background: #ef4444; }
+.toast-info { background: #3b82f6; }
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 0.90; transform: translateY(0);}
+}
