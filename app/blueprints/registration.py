@@ -33,7 +33,7 @@ def register():
     # Start OAuth flow – will come back at /register/callback
     session["nonce"] = generate_token()
 
-    redirect_uri = url_for("register_callback", _external=True)
+    redirect_uri = url_for("registration.register_callback", _external=True)
     return current_app.oauth.google.authorize_redirect(
         redirect_uri, nonce=session["nonce"]
     )

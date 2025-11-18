@@ -3,10 +3,14 @@
 ## ToDo
 
 * [ ] add renovate bot
+* [ ] only run terraform after changes detected by plan
 * [ ] reduce rights of terraform key
 * [x] add Alembic with Invite Codes + Local Postgres
 * [ ] Change Cloud SQL + Cloud Run to use private IP
 * [x] add user management via Google Auth
+    * [x] add invite codes in DB
+    * [x] add login process for registered users
+    * [x] add add registration process for invited members
 * [ ] add basic book list
     * store data in Cloud Spanner
     * [ ] add book
