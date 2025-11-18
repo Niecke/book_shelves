@@ -13,8 +13,11 @@ services:
 
   app:
     build: .
+    restart: unless-stopped
     volumes:
       - "./app:/app"
+    env_file:
+      - .env
     environment:
       - FLASK_AUTO_UPGRADE=true
       - SQLALCHEMY_DATABASE_HOST=db

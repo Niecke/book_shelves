@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}BookShelves{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='toast.js') }}"></script>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="toast-container">
+            {% for category, message in messages %}
+                <div class="toast toast-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <div class="app-bar">
+        <div style="flex: 1"></div>
+        <div class="app-title">BookShelves</div>
+        <div class="app-actions">
+            {% if user %}
+            <a href="{{ url_for('profile') }}">
+                <img class="profile-pic-top"
+                     src="{{ user.picture if user.picture else 'https://ui-avatars.com/api/?name=' ~ (user.name or user.email|default('User'))|urlencode }}"
+                     alt="User profile image">
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="btn-link btn-logout">Logout</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

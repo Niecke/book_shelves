@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - BookShelves{% endblock %}
+
+{% block content %}
+    <h2>Profile Information</h2>
+        <div class="profile-info">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            {% if user.name %}
+                <p><strong>Name:</strong> {{ user.name }}</p>
+            {% endif %}
+            {% if user.picture %}
+                <img src="{{ user.picture }}" alt="Profile Picture" style="max-width:120px; border-radius:50%;">
+            {% endif %}
+        </div>
+        <a href="{{ url_for('home') }}" class="btn-link">Home</a>
+{% endblock %}
