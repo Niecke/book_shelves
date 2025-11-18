@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Your Profile</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Profile - BookShelves{% endblock %}
+
+{% block content %}
     <h2>Profile Information</h2>
-    {% if user %}
         <div class="profile-info">
             <p><strong>Email:</strong> {{ user.email }}</p>
             {% if user.name %}
@@ -18,7 +14,4 @@
             {% endif %}
         </div>
         <a href="{{ url_for('home') }}" class="btn-link">Home</a>
-        <a href="{{ url_for('auth.logout') }}" class="btn-link">Logout</a>
-    {% endif %}
-</body>
-</html>
+{% endblock %}

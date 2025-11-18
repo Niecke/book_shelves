@@ -1,73 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>BookShelves</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="app-bar">
-        <div style="flex:1"></div>
-        <div class="app-title">BookShelves</div>
-        <div>
-            {% if user %}
-            <a href="{{ url_for('profile') }}">
-                <img class="profile-pic-top"
-                     src="{{ user.picture if user.picture else 'https://ui-avatars.com/api/?name=' ~ (user.name or user.email|default('User'))|urlencode }}"
-                     alt="User profile image">
-            </a>
-            {% endif %}
-            <a href="{{ url_for('auth.logout') }}" class="btn-link">Logout</a>
-        </div>
-    </div>
-    <div class="container">
-        {% if user %}
-        <a href="{{ url_for('book.search') }}" class="btn-link">Search for book</a>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul style="color:#f59e42; margin-bottom:1em;">
-                {% for category, message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-            {% endwith %}
-            <div class="book-list">
-                <h3 style="margin-bottom:0.5em; text-align:left;">Your Books</h3>
-                {% if books %}
-                    {% for book in books %}
-                    <div class="book-card">
-                        <div class="book-title">{{ book.title }}</div>
-                        <div class="book-meta">
-                            {% if book.authors %}by <span>{{ book.authors|join(', ') }}</span>{% endif %}
-                            &middot; <span>{{ book.language|upper }}</span>
-                            &middot; <span>ISBN: {{ book.isbn }}</span>
-                            &middot; <span>{{ book.genre|capitalize }}</span>
-                        </div>
-                        {% if book.description %}
-                            <div class="book-desc">{{ book.description }}</div>
-                        {% endif %}
-                        <form action="{{ url_for('book.delete_book', book_id=book.id) }}" method="post" style="margin-top:0.6em;">
-                            <button type="submit" class="btn-link btn-delete">Delete</button>
-                        </form>
+{% extends 'base.html' %}
+
+{% block title %}Home - BookShelves{% endblock %}
+
+{% block content %}
+    {% if user %}
+    <a href="{{ url_for('book.search') }}" class="btn-link">Search for book</a>
+        <div class="book-list">
+            <h3 style="margin-bottom:0.5em; text-align:left;">Your Books</h3>
+            {% if books %}
+                {% for book in books %}
+                <div class="book-card">
+                    <div class="book-title">{{ book.title }}</div>
+                    <div class="book-meta">
+                        {% if book.authors %}by <span>{{ book.authors|join(', ') }}</span>{% endif %}
+                        &middot; <span>{{ book.language|upper }}</span>
+                        &middot; <span>ISBN: {{ book.isbn }}</span>
+                        &middot; <span>{{ book.genre|capitalize }}</span>
                     </div>
-                    
-                    {% endfor %}
-                {% else %}
-                    <p>You have no books yet.</p>
-                {% endif %}
-            </div>
-        {% else %}
-        <h2>Welcome to BookShelves</h2>
-        <div style="margin: 2.5em 0; display: flex; flex-direction: column; align-items: center; gap: 1.2em;">
-            <a href="{{ url_for('auth.login') }}" class="btn-link">Login with Google</a>
-            <form action="{{ url_for('registration.register') }}" method="get" style="width: 100%;">
-                <input type="text" placeholder="Invite code" name="invite_code" required maxlength="16"
-                       style="margin-bottom:0.5em; width: 204px; padding: 0.7em; border-radius: 8px; border: 1px solid #e1e5ea; font-size: 1em;">
-                <button type="submit" class="btn-link">Register with Invite Code</button>
-            </form>
+                    {% if book.description %}
+                        <div class="book-desc">{{ book.description }}</div>
+                    {% endif %}
+                    <form action="{{ url_for('book.delete_book', book_id=book.id) }}" method="post" style="margin-top:0.6em;">
+                        <button type="submit" class="btn-link btn-delete">Delete</button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>You have no books yet.</p>
+            {% endif %}
         </div>
-        {% endif %}
+    {% else %}
+    <h2>Welcome to BookShelves</h2>
+    <div style="margin: 2.5em 0; display: flex; flex-direction: column; align-items: center; gap: 1.2em;">
+        <a href="{{ url_for('auth.login') }}" class="btn-link">Login with Google</a>
+        <form action="{{ url_for('registration.register') }}" method="get" style="width: 100%;">
+            <input type="text" placeholder="Invite code" name="invite_code" required maxlength="16"
+                   style="margin-bottom:0.5em; width: 204px; padding: 0.7em; border-radius: 8px; border: 1px solid #e1e5ea; font-size: 1em;">
+            <button type="submit" class="btn-link">Register with Invite Code</button>
+        </form>
     </div>
-</body>
-</html>
+    {% endif %}
+{% endblock %}

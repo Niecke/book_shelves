@@ -1,27 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>ISBN Lookup - BookShelves</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Search - BookShelves{% endblock %}
+
+{% block content %}
     <div class="container">
         <h2>Search for a Book by ISBN</h2>
         <form method="POST" style="margin-bottom:2em;">
             <input type="text" name="isbn" placeholder="Enter ISBN" maxlength="13" required style="padding: 0.7em; border-radius:8px; border:1px solid #ececec; width: 250px;">
             <button type="submit" class="btn-link">Search</button>
         </form>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            <ul style="color:#f59e42; margin-bottom:1em;">
-              {% for category, message in messages %}
-                <li>{{ message }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
 
         {% if book %}
         <div class="book-card">
@@ -49,6 +36,6 @@
             </form>
         </div>
         {% endif %}
+        <a href="{{ url_for('home') }}" class="btn-link">Home</a>
     </div>
-</body>
-</html>
+{% endblock %}

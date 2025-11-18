@@ -13,8 +13,69 @@ body {
     padding: 0;
 }
 
+.app-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.3em 2em 1.3em 2em;
+    background: var(--gray-bg, #f4f6fa);
+    border-bottom: 1px solid #e0e5ec;
+    box-shadow: 0 1px 4px rgba(30,41,59,0.04);
+    position: relative;
+}
+
+/* Ensure app-title is always centered using absolute centering technique */
+.app-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 2rem;
+    color: var(--primary, #2563eb);
+    letter-spacing: 1px;
+    font-weight: 600;
+    width: max-content;
+    z-index: 2;
+}
+
+/* Flex container for profile + logout */
+.app-actions {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    z-index: 2;
+}
+
+/* Reuse your profile-pic-top styles */
+.profile-pic-top {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+
+/* Button style for logout only */
+.btn-logout {
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5em 1em;
+    font-size: 1em;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.16s;
+}
+.btn-logout:hover, .btn-logout:focus {
+    background: #f87171;
+}
+
 .container {
-    max-width: 430px;
+    max-width: 80%;
     margin: 4em auto;
     background: var(--surface);
     box-shadow: var(--shadow);
@@ -91,37 +152,6 @@ img {
     background: #f87171;      /* light red */
 }
 
-.app-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1em 2em 1em 2em;
-    background: var(--gray-bg, #f4f6fa);
-    border-bottom: 1px solid #e0e5ec;
-    box-shadow: 0 1px 4px rgba(30,41,59,0.04);
-}
-.app-title {
-    flex: 1;
-    text-align: center;
-    font-size: 2rem;
-    color: var(--primary, #2563eb);
-    letter-spacing: 1px;
-    font-weight: 600;
-}
-.profile-pic-top {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    border: 2px solid #fff;
-    cursor: pointer;
-    margin-left: auto;
-}
-.container {
-    max-width: 500px;
-    margin: 3em auto;
-}
 .book-list {
     margin-top: 2.5em;
     display: flex;
@@ -149,4 +179,36 @@ img {
     font-size: 0.99em;
     color: #444;
     margin-top: 0.25em;
+}
+
+/* Flash messages as toast*/
+#toast-container {
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.toast {
+    min-width: 220px;
+    max-width: 300px;
+    background: #2563eb;
+    color: #fff;
+    padding: 0.7em 1.1em;
+    border-radius: 8px;
+    font-size: 1.06em;
+    box-shadow: 0 2px 12px rgba(30,41,59,0.13);
+    opacity: 0.90;
+    animation: fade-in 0.4s;
+}
+.toast-success { background: #10b981; }
+.toast-warning { background: #f59e42; color: #fff; }
+.toast-danger, .toast-error { background: #ef4444; }
+.toast-info { background: #3b82f6; }
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 0.90; transform: translateY(0);}
 }
