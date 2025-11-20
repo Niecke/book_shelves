@@ -20,16 +20,45 @@ book_bp = Blueprint(
 )
 
 
-def request_google_books_api(isbn: str, authors: str) -> dict:
+def request_google_books_api(
+    isbn: str = "", title: str = "", authors: str = ""
+) -> dict:
+    query = ""
     if isbn:
-        query = f"isbn:{isbn}"
+        query += f"isbn:{isbn}+"
+    elif title:
+        query += f"intitle:{title}+"
     elif authors:
-        query = f"inauthor:{authors}"
+        query += f"inauthor:{authors}+"
     else:
         return {}
     google_api = f"{env.GOOGLE_BOOKS_API}?q={query}"
     resp = requests.get(google_api)
     return resp.json()
+
+
+def process_results(data: dict) -> list[dict] | None:
+    results = []
+    for item in data.get("items", []):
+        info = item["volumeInfo"]
+        # Extract ISBN if available
+        isbn_list = [
+            identifier["identifier"]
+            for identifier in info.get("industryIdentifiers", [])
+            if identifier["type"] in ["ISBN_10", "ISBN_13"]
+        ]
+        isbn = isbn_list[0] if isbn_list else "N/A"
+        results.append(
+            {
+                "title": info.get("title"),
+                "authors": info.get("authors", ""),
+                "language": info.get("language"),
+                "description": info.get("description"),
+                "isbn": isbn,
+                "genre": ", ".join(info.get("categories", [])),
+            }
+        )
+    return results
 
 
 @book_bp.route("/search", methods=["GET", "POST"])
@@ -38,9 +67,10 @@ def search():
     book_data = []
     if request.method == "POST":
         isbn = request.form.get("isbn", "")
+        title = request.form.get("title", "")
         authors = request.form.get("authors", "")
         # first search for isbn
-        data = request_google_books_api(isbn, "")
+        data = request_google_books_api(isbn=isbn)
         for item in data.get("items", []):
             info = item["volumeInfo"]
             book_data.append(
@@ -54,26 +84,8 @@ def search():
                 }
             )
         # now search for authors
-        data = request_google_books_api("", authors)
-        for item in data.get("items", []):
-            info = item["volumeInfo"]
-            # Extract ISBN if available
-            isbn_list = [
-                identifier["identifier"]
-                for identifier in info.get("industryIdentifiers", [])
-                if identifier["type"] in ["ISBN_10", "ISBN_13"]
-            ]
-            isbn = isbn_list[0] if isbn_list else "N/A"
-            book_data.append(
-                {
-                    "title": info.get("title"),
-                    "authors": info.get("authors", ""),
-                    "language": info.get("language"),
-                    "description": info.get("description"),
-                    "isbn": isbn,
-                    "genre": ", ".join(info.get("categories", [])),
-                }
-            )
+        data = request_google_books_api(title=title, authors=authors)
+        book_data.extend(process_results(data))
         # if no books where found flash a message
         if not book_data:
             flash("No books found.", "warning")
